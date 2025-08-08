@@ -1,10 +1,20 @@
 #!/bin/bash
-# Скрипт встановлення пакету
 
 set -e
 
-echo "Встановлення залежностей Python..."
-pip3 install --upgrade pip
-pip3 install -r "${YUNOHOST_APP_DIR}/src/requirements.txt"
+# Приклад: встановлення залежностей, запуск сервісу
 
-echo "Встановлення завершена."
+echo "Встановлення OLX Parser..."
+
+# Оновити систему (опціонально)
+# apt-get update
+
+# Встановити Python і pip (приклад)
+apt-get install -y python3 python3-pip
+
+# Встановити залежності Flask (припустимо requirements.txt в src/)
+pip3 install -r src/requirements.txt
+
+# Налаштування сервісу (systemd або nginx) - за потреби
+
+echo "OLX Parser встановлено."
