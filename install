@@ -1,0 +1,40 @@
+#!/bin/bash
+
+set -e
+
+echo "Встановлення залежностей..."
+apt-get update
+apt-get install -y python3 python3-pip
+
+echo "Перехід у директорію додатку"
+cd "$YNH_APP_ROOT/src"
+
+echo "Встановлення Python-залежностей..."
+pip3 install -r requirements.txt
+
+echo "Створення systemd-сервісу для додатку"
+
+SERVICE_FILE="/etc/systemd/system/olxparser.service"
+
+cat > $SERVICE_FILE <<EOF
+[Unit]
+Description=OLX Parser Flask App
+After=network.target
+
+[Service]
+User=yunohost
+WorkingDirectory=$YNH_APP_ROOT/src
+ExecStart=/usr/bin/gunicorn --bind 127.0.0.1:5000 app:app
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+systemctl daemon-reload
+systemctl enable olxparser.service
+systemctl restart olxparser.service
+
+echo "Інсталяція завершена успішно."
+
+exit 0
