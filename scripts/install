@@ -1,20 +1,47 @@
 #!/bin/bash
-
 set -e
 
-# Приклад: встановлення залежностей, запуск сервісу
+APP_ID="olxparser"
+APP_DIR="/opt/yunohost/apps/$APP_ID"
+VENV_DIR="$APP_DIR/venv"
 
-echo "Встановлення OLX Parser..."
+echo "Створення директорії додатку..."
+mkdir -p "$APP_DIR"
 
-# Оновити систему (опціонально)
-# apt-get update
+echo "Копіювання файлів додатку..."
+cp -r $PWD/* "$APP_DIR"
 
-# Встановити Python і pip (приклад)
-apt-get install -y python3 python3-pip
+echo "Створення віртуального оточення Python..."
+python3 -m venv "$VENV_DIR"
 
-# Встановити залежності Flask (припустимо requirements.txt в src/)
-pip3 install -r src/requirements.txt
+echo "Активація віртуального оточення та встановлення залежностей..."
+source "$VENV_DIR/bin/activate"
+pip install --upgrade pip
+pip install -r "$APP_DIR/requirements.txt"
+deactivate
 
-# Налаштування сервісу (systemd або nginx) - за потреби
+echo "Створення systemd сервісу для Flask додатку..."
 
-echo "OLX Parser встановлено."
+SERVICE_FILE="/etc/systemd/system/$APP_ID.service"
+
+cat <<EOF > "$SERVICE_FILE"
+[Unit]
+Description=OLX Parser Flask App
+After=network.target
+
+[Service]
+User=yunohost
+Group=yunohost
+WorkingDirectory=$APP_DIR
+ExecStart=$VENV_DIR/bin/gunicorn -w 3 -b 0.0.0.0:5000 app:app
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+echo "Перезавантаження systemd і запуск сервісу..."
+systemctl daemon-reload
+systemctl enable $APP_ID
+systemctl start $APP_ID
+
+echo "Інсталяція завершена."
