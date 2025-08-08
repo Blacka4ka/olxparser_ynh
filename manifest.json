@@ -1,20 +1,28 @@
 {
   "id": "olxparser",
   "name": "OLX Парсер",
-  "version": "1.0",
-  "license": "MIT",
-  "description": "Простий парсер OLX на Flask з веб-інтерфейсом",
-  "maintainers": [
-    {
-      "name": "Viktor",
-      "email": "your.email@example.com"
-    }
-  ],
-  "website": "https://github.com/Blacka4ka/olxparser_ynh",
-  "install": {
-    "script": "scripts/install"
+  "packaging_format": 3,
+  "description": {
+    "en": "A simple OLX parser with web interface (Flask-based)",
+    "uk": "Простий OLX парсер з веб-інтерфейсом (на Flask)"
   },
-  "arguments": {
-    "install": {}
+  "version": "1.0.0",
+  "url": "https://github.com/Blacka4ka/olxparser_ynh",
+  "license": "MIT",
+  "maintainer": "Viktor <your.email@example.com>",
+  "requirements": {
+    "yunohost": ">= 12.0.0"
+  },
+  "multi_instance": false,
+  "services": [],
+  "resources": {
+    "default": {
+      "requirements": {
+        "ram": "256M"
+      },
+      "port": {
+        "http": 5000
+      }
+    }
   }
 }
