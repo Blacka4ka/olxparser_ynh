@@ -1,9 +1,0 @@
-#!/bin/bash
-
-source _common.sh || exit 1
-
-app=$YNH_APP_INSTANCE_NAME
-
-ynh_remove_nginx_config
-ynh_remove_systemd_service --service_name="$app"
-rm -rf "/var/www/$app"
