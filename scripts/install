@@ -1,49 +1,32 @@
 #!/bin/bash
 
-# Fail on error
-set -eu
+# YunoHost helpers
+source _common.sh || exit 1
 
-# Load YunoHost helpers
-source /usr/share/yunohost/helpers
+# Стандартні змінні
+app=$YNH_APP_INSTANCE_NAME
+domain=$(ynh_app_setting_get $app domain)
+path_url=$(ynh_app_setting_get $app path)
 
-# Vars
-app=olxparser
-final_path=/opt/$app
+# Кроки інсталяції
+ynh_script_progression --message="Створення каталогу додатка..." --time
+app_dir="/var/www/$app"
+mkdir -p "$app_dir"
 
-# Install Python & pip
-ynh_install_app_dependencies python3 python3-pip
+# Копіюємо Flask-додаток
+cp -r ../src/app/* "$app_dir"
 
-# Create folder
-mkdir -p "$final_path"
+# Віртуальне оточення
+python3 -m venv "$app_dir/venv"
+source "$app_dir/venv/bin/activate"
+pip install -r "$app_dir/requirements.txt"
 
-# Copy source files
-cp -r ../src/* "$final_path"
+# Система systemd
+ynh_add_systemd_service --service_name "$app" --exec_start "$app_dir/venv/bin/python $app_dir/main.py"
 
-# Install requirements
-pip3 install -r "$final_path/requirements.txt"
+# Nginx
+ynh_add_nginx_config --domain="$domain" --path_url="$path_url" --app="$app"
 
-# Create systemd service
-cat > /etc/systemd/system/$app.service << EOF
-[Unit]
-Description=OLX Parser (Flask)
-After=network.target
+ynh_systemd_action --service_name="$app" --action=restart
 
-[Service]
-User=root
-WorkingDirectory=$final_path
-ExecStart=/usr/bin/python3 $final_path/app.py
-Restart=always
-
-[Install]
-WantedBy=multi-user.target
-EOF
-
-# Enable and start service
-systemctl daemon-reexec
-systemctl enable --now $app
-
-# NGINX reverse proxy
-ynh_add_nginx_config --service_name=$app --port=5000 --path_url=/
-
-# Register app
-ynh_systemd_action --service_name=$app --action=start
+ynh_script_progression --message="Інсталяція завершена!" --time
