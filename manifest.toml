@@ -1,0 +1,18 @@
+id = "olxparser"
+name = "OLX Parser"
+packaging_format = 2
+
+[developer]
+name = "Blacka4ka"
+email = "you@example.com"
+
+[install]
+url = "https://github.com/Blacka4ka/olxparser_ynh"
+requirements = []
+
+[description]
+en = "Parses OLX with filters and saves data to file."
+uk = "Парсить OLX з фільтрами та зберігає дані у файл."
+
+[license]
+open = true
