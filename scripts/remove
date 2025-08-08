@@ -1,14 +1,9 @@
 #!/bin/bash
-set -eu
 
-app=olxparser
-final_path=/opt/$app
+source _common.sh || exit 1
 
-systemctl stop $app || true
-systemctl disable $app || true
-rm -f /etc/systemd/system/$app.service
-systemctl daemon-reload
-
-rm -rf "$final_path"
+app=$YNH_APP_INSTANCE_NAME
 
 ynh_remove_nginx_config
+ynh_remove_systemd_service --service_name="$app"
+rm -rf "/var/www/$app"
