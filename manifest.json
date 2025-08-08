@@ -6,7 +6,6 @@
   "description": "Простий парсер OLX на Flask з веб-інтерфейсом",
   "maintainer": "Viktor <your.email@example.com>",
   "website": "https://github.com/Blacka4ka/olxparser_ynh",
-  "dependencies": [],
   "install": {
     "script": "scripts/install"
   }
