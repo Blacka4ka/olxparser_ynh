@@ -1,0 +1,49 @@
+#!/bin/bash
+
+# Fail on error
+set -eu
+
+# Load YunoHost helpers
+source /usr/share/yunohost/helpers
+
+# Vars
+app=olxparser
+final_path=/opt/$app
+
+# Install Python & pip
+ynh_install_app_dependencies python3 python3-pip
+
+# Create folder
+mkdir -p "$final_path"
+
+# Copy source files
+cp -r ../src/* "$final_path"
+
+# Install requirements
+pip3 install -r "$final_path/requirements.txt"
+
+# Create systemd service
+cat > /etc/systemd/system/$app.service << EOF
+[Unit]
+Description=OLX Parser (Flask)
+After=network.target
+
+[Service]
+User=root
+WorkingDirectory=$final_path
+ExecStart=/usr/bin/python3 $final_path/app.py
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+# Enable and start service
+systemctl daemon-reexec
+systemctl enable --now $app
+
+# NGINX reverse proxy
+ynh_add_nginx_config --service_name=$app --port=5000 --path_url=/
+
+# Register app
+ynh_systemd_action --service_name=$app --action=start
