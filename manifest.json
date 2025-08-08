@@ -12,7 +12,7 @@
     }
   ],
   "description": "Простий парсер OLX на Flask з веб-інтерфейсом",
-  "website": "https://github.com/yourusername/olxparser_ynh",
+  "website": "https://github.com/Blacka4ka/olxparser_ynh",
   "license": "MIT",
   "categories": ["tools", "web"],
   "services": {
@@ -23,5 +23,10 @@
         "http": 5000
       }
     }
+  },
+  "arguments": {
+    "install": {},
+    "upgrade": {},
+    "remove": {}
   }
 }
