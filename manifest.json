@@ -1,0 +1,27 @@
+{
+  "id": "olxparser",
+  "name": "OLX Парсер",
+  "version": "1.0",
+  "yunohost": {
+    "min_version": "4.2"
+  },
+  "maintainers": [
+    {
+      "name": "Viktor",
+      "email": "your.email@example.com"
+    }
+  ],
+  "description": "Простий парсер OLX на Flask з веб-інтерфейсом",
+  "website": "https://github.com/yourusername/olxparser_ynh",
+  "license": "MIT",
+  "categories": ["tools", "web"],
+  "services": {
+    "olxparser": {
+      "title": "OLX Parser service",
+      "description": "Flask app with gunicorn",
+      "ports": {
+        "http": 5000
+      }
+    }
+  }
+}

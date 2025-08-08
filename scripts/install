@@ -1,0 +1,10 @@
+#!/bin/bash
+# Скрипт встановлення пакету
+
+set -e
+
+echo "Встановлення залежностей Python..."
+pip3 install --upgrade pip
+pip3 install -r "${YUNOHOST_APP_DIR}/src/requirements.txt"
+
+echo "Встановлення завершена."
