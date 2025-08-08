@@ -13,7 +13,8 @@
   "website": "https://github.com/Blacka4ka/olxparser_ynh",
   "install": {
     "script": "scripts/install"
+  },
+  "arguments": {
+    "install": {}
   }
 }
-
-
