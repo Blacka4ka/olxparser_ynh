@@ -4,9 +4,16 @@
   "version": "1.0",
   "license": "MIT",
   "description": "Простий парсер OLX на Flask з веб-інтерфейсом",
-  "maintainer": "Viktor <your.email@example.com>",
+  "maintainers": [
+    {
+      "name": "Viktor",
+      "email": "your.email@example.com"
+    }
+  ],
   "website": "https://github.com/Blacka4ka/olxparser_ynh",
   "install": {
     "script": "scripts/install"
   }
 }
+
+
