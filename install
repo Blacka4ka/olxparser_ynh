@@ -1,40 +1,46 @@
 #!/bin/bash
 
+# Встановлення залежностей пакета
 set -e
 
-echo "Встановлення залежностей..."
-apt-get update
-apt-get install -y python3 python3-pip
+APP_DIR="/opt/yunohost.olxparser"
+SRC_DIR="$APP_DIR/src"
+VENV_DIR="$APP_DIR/venv"
 
-echo "Перехід у директорію додатку"
-cd "$YNH_APP_ROOT/src"
+echo "Створюємо директорію додатку..."
+mkdir -p $SRC_DIR
 
-echo "Встановлення Python-залежностей..."
-pip3 install -r requirements.txt
+echo "Копіюємо файли додатку..."
+cp -r src/* $SRC_DIR/
 
-echo "Створення systemd-сервісу для додатку"
+echo "Створюємо віртуальне оточення..."
+python3 -m venv $VENV_DIR
 
-SERVICE_FILE="/etc/systemd/system/olxparser.service"
+echo "Активуємо віртуальне оточення і встановлюємо залежності..."
+$VENV_DIR/bin/pip install --upgrade pip
+$VENV_DIR/bin/pip install -r $SRC_DIR/requirements.txt
 
-cat > $SERVICE_FILE <<EOF
+echo "Створюємо systemd сервіс для запуску додатку..."
+
+cat > /etc/systemd/system/yunohost.olxparser.service <<EOF
 [Unit]
 Description=OLX Parser Flask App
 After=network.target
 
 [Service]
-User=yunohost
-WorkingDirectory=$YNH_APP_ROOT/src
-ExecStart=/usr/bin/gunicorn --bind 127.0.0.1:5000 app:app
-Restart=always
+User=www-data
+Group=www-data
+WorkingDirectory=$SRC_DIR
+Environment="PATH=$VENV_DIR/bin"
+ExecStart=$VENV_DIR/bin/python $SRC_DIR/app.py
 
 [Install]
 WantedBy=multi-user.target
 EOF
 
+echo "Перезавантажуємо systemd і запускаємо сервіс..."
 systemctl daemon-reload
-systemctl enable olxparser.service
-systemctl restart olxparser.service
+systemctl enable yunohost.olxparser.service
+systemctl restart yunohost.olxparser.service
 
-echo "Інсталяція завершена успішно."
-
-exit 0
+echo "Готово! OLX парсер встановлено і запущено."
