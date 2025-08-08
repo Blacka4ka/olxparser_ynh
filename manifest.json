@@ -11,14 +11,10 @@
   ],
   "url": "https://github.com/Blacka4ka/olxparser_ynh",
   "license": "MIT",
-  "install": {
-    "script": "install"
-  },
-  "remove": {
-    "script": "remove"
-  },
-  "upgrade": {
-    "script": "upgrade"
+  "arguments": {
+    "install": {},
+    "remove": {},
+    "upgrade": {}
   },
   "dependencies": [
     "python3",
