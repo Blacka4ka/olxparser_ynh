@@ -1,0 +1,13 @@
+#!/bin/bash
+set -e
+
+echo "Зупиняємо та вимикаємо сервіс OLX парсер..."
+systemctl stop yunohost.olxparser.service || true
+systemctl disable yunohost.olxparser.service || true
+rm -f /etc/systemd/system/yunohost.olxparser.service
+systemctl daemon-reload
+
+echo "Видаляємо файли додатку..."
+rm -rf /opt/yunohost.olxparser
+
+echo "Готово! OLX парсер видалено."

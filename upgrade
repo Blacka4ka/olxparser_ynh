@@ -1,0 +1,22 @@
+#!/bin/bash
+set -e
+
+APP_DIR="/opt/yunohost.olxparser"
+SRC_DIR="$APP_DIR/src"
+VENV_DIR="$APP_DIR/venv"
+
+echo "Оновлення OLX парсеру..."
+
+# Зупиняємо сервіс
+systemctl stop yunohost.olxparser.service
+
+# Копіюємо нові файли (припускаємо, що встановлення нового коду вже зроблено)
+cp -r src/* $SRC_DIR/
+
+# Оновлюємо залежності
+$VENV_DIR/bin/pip install --upgrade -r $SRC_DIR/requirements.txt
+
+# Запускаємо сервіс
+systemctl start yunohost.olxparser.service
+
+echo "Оновлення завершено."
