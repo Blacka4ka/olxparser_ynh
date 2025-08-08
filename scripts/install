@@ -17,7 +17,7 @@ python3 -m venv "$VENV_DIR"
 echo "Активація віртуального оточення та встановлення залежностей..."
 source "$VENV_DIR/bin/activate"
 pip install --upgrade pip
-pip install -r "$APP_DIR/requirements.txt"
+pip install -r "$APP_DIR/src/requirements.txt"
 deactivate
 
 echo "Створення systemd сервісу для Flask додатку..."
@@ -32,7 +32,7 @@ After=network.target
 [Service]
 User=yunohost
 Group=yunohost
-WorkingDirectory=$APP_DIR
+WorkingDirectory=$APP_DIR/src
 ExecStart=$VENV_DIR/bin/gunicorn -w 3 -b 0.0.0.0:5000 app:app
 
 [Install]
